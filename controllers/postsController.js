@@ -2,7 +2,17 @@
 const connection = require('../data/db');
 
 const index = (req, res) => {
-    res.send('index placeholder');
+    // query
+    const sql = 'SELECT * FROM posts';
+
+    // execute query
+    connection.query(sql, (err, results) => {
+        // error handler
+        if (err) return res.status(500).send(err);
+
+        // response
+        res.send(results);
+    });
 }
 
 const show = (req, res) => {
