@@ -1,3 +1,6 @@
+// import connection
+const connection = require('../data/db');
+
 const index = (req, res) => {
     res.send('index placeholder');
 }
