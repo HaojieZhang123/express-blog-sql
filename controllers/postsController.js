@@ -16,7 +16,23 @@ const index = (req, res) => {
 }
 
 const show = (req, res) => {
-    res.send('show placeholder');
+    // query
+    const sql = 'SELECT * FROM posts WHERE id = ?';
+
+    // get id
+    const id = req.params.id;
+
+    // handle not found
+    if (!id) return res.status(404).send('post not found');
+
+    // execute query
+    connection.query(sql, [id], (err, results) => {
+        // error handler
+        if (err) return res.status(500).send(err);
+
+        // response
+        res.send(results);
+    });
 }
 
 const store = (req, res) => {
