@@ -32,7 +32,20 @@ const modify = (req, res) => {
 }
 
 const destroy = (req, res) => {
-    res.send('destroy placeholder');
+    // query
+    const sql = 'DELETE FROM posts WHERE id = ?';
+
+    // get id
+    const id = req.params.id;
+
+    // execute query
+    connection.query(sql, [id], (err, results) => {
+        // error handler
+        if (err) return res.status(500).send(err);
+
+        // response
+        res.send(`data ${id} deleted`);
+    });
 }
 
 module.exports = {
