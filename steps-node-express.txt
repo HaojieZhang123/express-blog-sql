@@ -1,0 +1,76 @@
+1 - Lanciamo npm init
+2 - L'entry point lo chiamiamo app.js
+3 - Lanciamo il comando npm install express
+4 - Creo il file .gitignore in cui vado a scrivere la cartella node_modules
+5 - Creiamo il file app.js
+6 - Nel package.json andiamo a mettere gli alias nell'oggetto scripts per avviare il server. Creiamo quindi gli alias start e watch.
+7 - Inserisco nel file app.js le seguenti righe:
+  a - const express = require('express');
+  b - const app = express();
+  c - const port = 3000;
+  d - Inserisco la rotta base '/' con app.get
+  e - Inserisco app.listen alla porta definita sopra per far restare in ascolto il server di eventuali richieste.
+8 - Definizione degli asset statici attraverso la creazione della cartella public all'interno del progetto
+9 - Nel file app.js andiamo a dire che deve essere presa questa cartella per leggerne il contenuto
+10 - Creo la cartella routers
+11 - All'interno della cartella routers creo il/i file/s che mi servono per le rotte della singola risorsa
+12 - All'interno del singolo file importo express e la classe Router e poi vado a creare le singole rotte. 
+13 - export del router creato
+14 - Importo il file appena creato in app.js
+15 - inserisco l'istruzione per utilizzare questo file: app.use('/prefisso', variabileDelFile);
+
+index => get
+show => get
+store => post
+update (modifica totale) => put
+modify (modifica parziale) => patch
+destroy => delete
+
+//STEP PER LE OPERAZIONI CRUD
+1 - creo un file con l'array di oggetti su cui voglio lavorare. 
+2 - creo il file resourceController (es. pizzaController, videogameController, drinkController...)
+3 - All'interno del controller vado ad importare vado ad importare l'array di oggetti
+4 - Definisco le funzioni per le CRUD: index, show, store, update, modify, destroy (*).
+5 - esporto le funzioni con module.exports.
+6 - aggiungo app.use(express.json()) nel file app.js per poter effettuare il body parsing della richiesta.
+
+CREAZIONE MIDDLEWARE
+1 - Creo una cartella middlewares
+2 - All'interno della cartella creo i miei middlewares come file
+3 - All'interno dei file, definisco una funzione. Questa funzione ha come parametri req, res e next. 
+3.a - Se il middleware non è bloccante => utilizzo next() per passare al metodo successivo
+3.b - Altrimenti vuol dire che sono in un middleware che gestisce un errore. Dovrò quindi restituire un json che rappresenta un errore. Non ha senso quindi utilizzare il metodo next().
+
+INSTALLAZIONE MYSQL2
+1 - Lanciare il comando npm install mysql2
+2 - Creare una cartella data in cui inserire un file chiamato db.js. Questo file NON contiene i dati da mostrare, ma i parametri di connessione al db e la procedura di connessione stessa.
+2.1 - Importo mysql2 in una variabile
+2.2 - creo una variabile per la connessione al database
+2.3 - Scrivo queste istruzioni all'interno del file 
+
+// importo mysql2
+const mysql = require('mysql2');
+
+// creo la variabile per la connesione al database
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'db_pizzeria'
+});
+
+// utilizzo la variabile per instaurare una connessione
+connection.connect(() => {
+    console.log('Connected to MySQL!')
+})
+
+module.exports = connection;
+
+
+
+APPENDICE FUNZIONI (*)
+A - INDEX: restituisco il contenuto della variabile (a cui ho assegnato l'array di oggetti) attraverso il metodo json.
+B - SHOW: restituisco il singolo elemento dell'array avente come id il valore passato come parametro dinamico
+C - DESTROY: cancello dall'array l'elemento avente come id il valore passato come parametro dinamico
+D - STORE: passo dei parametri al body della richiesta, nel metodo li recupero e li utilizzo per creare un nuovo oggetto da inserire nell'array di oggetti.
+E - UPDATE/MODIFY: passo dei parametri al body della richiesta, nel metodo recupero prima l'elemento da modificare attraverso il parametro dinamico, poi recupero i parametri del body della richiesta e modifico quindi i dati della risorsa.
