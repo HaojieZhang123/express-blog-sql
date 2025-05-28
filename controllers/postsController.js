@@ -22,16 +22,34 @@ const show = (req, res) => {
     // get id
     const id = req.params.id;
 
-    // handle not found
-    if (!id) return res.status(404).send('post not found');
+    // tags query
+    const tagSql = `
+        SELECT tags.id, tags.label 
+        FROM tags
+        JOIN post_tag ON tags.id = post_tag.tag_id
+        WHERE post_tag.post_id = ?
+    `;
 
     // execute query
     connection.query(sql, [id], (err, results) => {
         // error handler
         if (err) return res.status(500).send(err);
 
-        // response
-        res.send(results);
+        // verify if post exists
+        if (results.length === 0) return res.status(404).send('post not found');
+
+        // get post
+        const post = results[0];
+
+        // execute tags query
+        connection.query(tagSql, [id], (err, tags) => {
+            // error handler
+            if (err) return res.status(500).send(err);
+
+            // response
+            post.tags = tags;
+            res.send(post);
+        });
     });
 }
 
